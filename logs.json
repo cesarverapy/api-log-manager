@@ -1,0 +1,14 @@
+[
+    {
+        "timestamp": "2024-08-09T01:14:56.268Z",
+        "service_name": "Service1",
+        "log_level": "INFO",
+        "message": "Este es un mensaje de log de Service1"
+    },
+    {
+        "timestamp": "2024-08-09T01:14:59.541Z",
+        "service_name": "Service2",
+        "log_level": "ERROR",
+        "message": "Este es un mensaje de error de Service2"
+    }
+]
