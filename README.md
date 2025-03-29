@@ -11,10 +11,6 @@ API Log Manager is a centralized logging solution designed for distributed API s
 
 ## Getting Started
 
-### Prerequisites
-- Node.js (v14+)
-- npm (v6+)
-
 ### Installation
 1. Clone this repository:
    ```bash
