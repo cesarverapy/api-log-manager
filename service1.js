@@ -1,4 +1,4 @@
-const axios = require('axios'); // importamos axios para realizar solicitudes http
+const axios = require('axios');
 
 // Configuration
 const config = {
@@ -29,7 +29,6 @@ async function findServerPort() {
                 return port;
             }
         } catch (error) {
-            // Port not available or server not responding, try next port
             continue;
         }
     }
@@ -84,5 +83,4 @@ async function main() {
     }
 }
 
-// Run the main function
 main();

@@ -1,4 +1,4 @@
-const axios = require('axios'); // importamos axios para realizar solicitudes http
+const axios = require('axios');
 
 // Configuration
 const config = {

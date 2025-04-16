@@ -1,7 +1,7 @@
-const express = require('express'); // importamos el framework express para crear el servidor
-const bodyParser = require('body-parser'); // importamos body-parser para procesar el cuerpo de las peticiones http
-const fs = require('fs'); // importamos fs (filesystem) para trabajar con archivos
-const path = require('path'); // importamos path para trabajar con rutas de archivos y directorios
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
 const winston = require('winston');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
