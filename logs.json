@@ -10,5 +10,29 @@
         "service_name": "Service2",
         "log_level": "ERROR",
         "message": "Este es un mensaje de error de Service2"
+    },
+    {
+        "timestamp": "2025-04-16T02:36:15.605Z",
+        "service_name": "Service1",
+        "log_level": "INFO",
+        "message": "este es un mensaje de log de service1"
+    },
+    {
+        "timestamp": "2025-04-16T02:36:15.735Z",
+        "service_name": "Service2",
+        "log_level": "ERROR",
+        "message": "este es un mensaje de error de service2"
+    },
+    {
+        "timestamp": "2025-04-16T02:36:47.424Z",
+        "service_name": "Service1",
+        "log_level": "INFO",
+        "message": "este es un mensaje de log de service1"
+    },
+    {
+        "timestamp": "2025-04-16T02:36:53.861Z",
+        "service_name": "Service2",
+        "log_level": "ERROR",
+        "message": "este es un mensaje de error de service2"
     }
 ]

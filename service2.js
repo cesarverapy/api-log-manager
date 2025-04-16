@@ -1,22 +1,88 @@
 const axios = require('axios'); // importamos axios para realizar solicitudes http
 
-const url = 'http://localhost:5001/logs'; // definimos la url del servidor central de logging
-const headers = { // configuramos los headers de la solicitud
-    Authorization: 'Bearer service2_token', // agregamos el token de autenticacion en el header
-    'Content-Type': 'application/json' // especificamos que el contenido de la peticion es json
+// Configuration
+const config = {
+    serverUrl: process.env.LOG_SERVER_URL || 'http://localhost:5001/logs',
+    serviceName: 'Service2',
+    authToken: 'service2_token',
+    retryAttempts: 3,
+    retryDelay: 1000, // milliseconds
+    portRange: {
+        start: 5001,
+        end: 5010
+    }
 };
 
-const logData = { // definimos los datos del log a enviar
-    timestamp: new Date().toISOString(), // generamos un timestamp en formato iso
-    service_name: 'Service2', // nombre del servicio que envia el log
-    log_level: 'ERROR', // nivel del log (error)
-    message: 'este es un mensaje de error de service2' // mensaje del log
+// Headers configuration
+const headers = {
+    Authorization: `Bearer ${config.authToken}`,
+    'Content-Type': 'application/json'
 };
 
-axios.post(url, logData, { headers }) // enviamos una solicitud post al servidor con los datos del log
-    .then(response => { // manejamos la respuesta exitosa
-        console.log(`response from server: ${response.status} - ${response.data.message}`); // mostramos el codigo de estado y el mensaje del servidor
-    })
-    .catch(error => { // manejamos errores
-        console.error(`error: ${error.response ? error.response.status : error.message}`); // mostramos el error si ocurre
-    });
+// Function to find the server port
+async function findServerPort() {
+    for (let port = config.portRange.start; port <= config.portRange.end; port++) {
+        try {
+            const url = `http://localhost:${port}/health`;
+            const response = await axios.get(url, { timeout: 1000 });
+            if (response.data.status === 'healthy') {
+                return port;
+            }
+        } catch (error) {
+            // Port not available or server not responding, try next port
+            continue;
+        }
+    }
+    throw new Error('Could not find running server in port range');
+}
+
+// Function to send log with retry mechanism
+async function sendLog(logData, attempt = 1) {
+    try {
+        const port = await findServerPort();
+        const response = await axios.post(`http://localhost:${port}/logs`, logData, { 
+            headers,
+            timeout: 5000 // 5 second timeout
+        });
+        console.log(`Log sent successfully to port ${port}: ${response.status} - ${response.data.message}`);
+        return response.data;
+    } catch (error) {
+        if (attempt < config.retryAttempts) {
+            console.warn(`Attempt ${attempt} failed. Retrying in ${config.retryDelay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, config.retryDelay));
+            return sendLog(logData, attempt + 1);
+        }
+        throw error;
+    }
+}
+
+// Function to generate log data
+function generateLogData(level, message) {
+    return {
+        timestamp: new Date().toISOString(),
+        service_name: config.serviceName,
+        log_level: level,
+        message: message
+    };
+}
+
+// Example usage
+async function main() {
+    try {
+        // Send an INFO log
+        await sendLog(generateLogData('INFO', 'Service2 started successfully'));
+        
+        // Send an ERROR log
+        await sendLog(generateLogData('ERROR', 'Database connection failed'));
+        
+        // Send a WARNING log
+        await sendLog(generateLogData('WARNING', 'High memory usage detected'));
+        
+    } catch (error) {
+        console.error('Failed to send logs:', error.response ? error.response.data : error.message);
+        process.exit(1);
+    }
+}
+
+// Run the main function
+main();
