@@ -6,7 +6,7 @@ const config = {
     serviceName: 'Service1',
     authToken: 'service1_token',
     retryAttempts: 3,
-    retryDelay: 1000, // milliseconds
+    retryDelay: 1000, 
     portRange: {
         start: 5001,
         end: 5010
@@ -41,7 +41,7 @@ async function sendLog(logData, attempt = 1) {
         const port = await findServerPort();
         const response = await axios.post(`http://localhost:${port}/logs`, logData, { 
             headers,
-            timeout: 5000 // 5 second timeout
+            timeout: 5000 
         });
         console.log(`Log sent successfully to port ${port}: ${response.status} - ${response.data.message}`);
         return response.data;
@@ -68,13 +68,10 @@ function generateLogData(level, message) {
 // Example usage
 async function main() {
     try {
-        // Send an INFO log
         await sendLog(generateLogData('INFO', 'Service1 started successfully'));
         
-        // Send an ERROR log
         await sendLog(generateLogData('ERROR', 'An error occurred in Service1'));
         
-        // Send a WARNING log
         await sendLog(generateLogData('WARNING', 'Resource usage is high'));
         
     } catch (error) {

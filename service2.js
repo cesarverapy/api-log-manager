@@ -6,7 +6,7 @@ const config = {
     serviceName: 'Service2',
     authToken: 'service2_token',
     retryAttempts: 3,
-    retryDelay: 1000, // milliseconds
+    retryDelay: 1000,
     portRange: {
         start: 5001,
         end: 5010
@@ -29,7 +29,6 @@ async function findServerPort() {
                 return port;
             }
         } catch (error) {
-            // Port not available or server not responding, try next port
             continue;
         }
     }
@@ -42,7 +41,7 @@ async function sendLog(logData, attempt = 1) {
         const port = await findServerPort();
         const response = await axios.post(`http://localhost:${port}/logs`, logData, { 
             headers,
-            timeout: 5000 // 5 second timeout
+            timeout: 5000
         });
         console.log(`Log sent successfully to port ${port}: ${response.status} - ${response.data.message}`);
         return response.data;
@@ -69,13 +68,10 @@ function generateLogData(level, message) {
 // Example usage
 async function main() {
     try {
-        // Send an INFO log
         await sendLog(generateLogData('INFO', 'Service2 started successfully'));
         
-        // Send an ERROR log
         await sendLog(generateLogData('ERROR', 'Database connection failed'));
         
-        // Send a WARNING log
         await sendLog(generateLogData('WARNING', 'High memory usage detected'));
         
     } catch (error) {
@@ -84,5 +80,4 @@ async function main() {
     }
 }
 
-// Run the main function
 main();

@@ -21,8 +21,8 @@ const logger = winston.createLogger({
     ]
 });
 
-const app = express(); // inicializamos la aplicacion express
-app.use(bodyParser.json()); // configuramos express para usar body-parser y procesar json en las peticiones
+const app = express();
+app.use(bodyParser.json());
 
 // Security middleware
 app.use(helmet());
@@ -234,5 +234,4 @@ async function startServer() {
     }
 }
 
-// Start the server
 startServer();
